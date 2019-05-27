@@ -3,18 +3,19 @@
 }
 
 .collapsibleTree .node circle {
-  fill: #fff;
-  stroke: #000;
+  /*fill: #f00;*/
+  fill: #ccc;
+  /*stroke: #000;*/
 }
 
 .collapsibleTree .node text {
-  font: 10px sans-serif;
+  font: 7px sans-serif;
 }
 
 .collapsibleTree .link {
   fill: none;
   stroke: #ccc;
-  stroke-width: 1.5px;
+  stroke-width: 2px; /*1.5px*/
 }
 
 .collapsibleTree div.tooltip {

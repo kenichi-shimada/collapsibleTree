@@ -6,7 +6,7 @@ HTMLWidgets.widget({
   factory: function(el, width, height) {
 
     var i = 0,
-    duration = 750,
+    duration = 300, //750
     root = {},
     options = {},
     treemap;
@@ -72,7 +72,7 @@ HTMLWidgets.widget({
       .attr('class', 'node')
       .attr('r', 1e-6)
       .style('fill', function(d) {
-        return d.data.fill || (d._children ? options.fill : '#fff');
+        return d.data.fill || (d._children ? options.fill : '#ccc');
       })
       .style('stroke-width', function(d) {
         return d._children ? 3 : 1;
@@ -80,17 +80,22 @@ HTMLWidgets.widget({
 
       // Add labels for the nodes
       nodeEnter.append('text')
+      .filter(function(d) { return !(d.children || d._children);})
       .attr('dy', '.35em')
       .attr('x', function(d) {
         // Scale padding for label to the size of node
-        var padding = (d.data.SizeOfNode || 10) + 3
+        var padding = 4 + 3; //(d.data.SizeOfNode || 10) + 3
         return d.children || d._children ? -1 * padding : padding;
       })
       .attr('text-anchor', function(d) {
         return d.children || d._children ? 'end' : 'start';
       })
       .style('font-size', options.fontSize + 'px')
-      .text(function(d) { return d.data.name; });
+      .style('fill', "black")
+      .text(function(d) { return d.data.name; })
+      .style("fill", function(d) {
+        return(d.data.name == options.selected ? "red" : "black");
+      });
 
       // UPDATE
       var nodeUpdate = nodeEnter.merge(node);
@@ -105,10 +110,16 @@ HTMLWidgets.widget({
       // Update the node attributes and style
       nodeUpdate.select('circle.node')
       .attr('r', function(d) {
-        return d.data.SizeOfNode || 10; // default radius is 10
+        if (d.children || d._children) {
+          return (5)/1.5; // default radius is 10
+        } else {
+          return (5); // default radius is 10
+          // return (d.data.SizeOfNode || 10); // default radius is 10
+        }
       })
       .style('fill', function(d) {
-        return d.data.fill || (d._children ? options.fill : '#fff');
+        return d.data.fill || (d._children ? options.fill : '#999');
+        // return d.data.fill || (d._children ? '#999' : (d.children ? options.fill : '#4682B4'));        
       })
       .style('stroke-width', function(d) {
         return d._children ? 3 : 1;
@@ -117,8 +128,9 @@ HTMLWidgets.widget({
 
 
       // Remove any exiting nodes
-      var nodeExit = node.exit().transition()
-      .duration(duration)
+      var nodeExit = node.exit()
+      // .transition()
+      // .duration(duration)
       .attr('transform', function(d) {
         return 'translate(' + source.y + ',' + source.x + ')';
       })
@@ -157,8 +169,9 @@ HTMLWidgets.widget({
       .attr('d', function(d){ return diagonal(d, d.parent) });
 
       // Remove any exiting links
-      var linkExit = link.exit().transition()
-      .duration(duration)
+      var linkExit = link.exit()
+      // .transition()
+      // .duration(duration)
       .attr('d', function(d) {
         var o = {x: source.x, y: source.y}
         return diagonal(o, o)
@@ -184,14 +197,14 @@ HTMLWidgets.widget({
 
       // Toggle children on click.
       function click(d) {
-        if (d.children) {
-          d._children = d.children;
-          d.children = null;
-        } else {
-          d.children = d._children;
-          d._children = null;
-        }
-        update(d);
+        // if (d.children) {
+        //   d._children = d.children;
+        //   d.children = null;
+        // } else {
+        //   d.children = d._children;
+        //   d._children = null;
+        // }
+        // update(d);
         // Hide the tooltip after clicking
         tooltip.transition()
         .duration(100)
@@ -202,7 +215,7 @@ HTMLWidgets.widget({
           obj = d;
           // Navigate up the list and recursively find parental nodes
           for (var n = d.depth; n > 0; n--) {
-            nest[options.hierarchy[n-1]] = obj.data.name
+            nest[options.hierarchy[n-1]] = obj.data.key
             obj = obj.parent
           }
           Shiny.onInputChange(options.input, nest)
@@ -212,7 +225,7 @@ HTMLWidgets.widget({
       // Show tooltip on mouseover
       function mouseover(d) {
         tooltip.transition()
-        .duration(200)
+        .duration(100) //200
         .style('opacity', .9);
 
         // Show either a constructed tooltip, or override with one from the data
@@ -228,7 +241,7 @@ HTMLWidgets.widget({
       // Hide tooltip on mouseout
       function mouseout(d) {
         tooltip.transition()
-        .duration(500)
+        .duration(100) //500
         .style('opacity', 0);
       }
     }
@@ -264,20 +277,20 @@ HTMLWidgets.widget({
         }
 
         // Optionally collapse after the second level
-        if (options.collapsed) root.children.forEach(collapse);
+        // if (options.collapsed) root.children.forEach(collapse);
         update(root);
 
         // Collapse the node and all it's children
-        function collapse(d) {
-          // A collapsed data value was specified and is true
-          if(d.children && options.collapsed in d.data && !d.data[options.collapsed]) {
-            d.children.forEach(collapse)
-          } else if(d.children) {
-            d._children = d.children
-            d._children.forEach(collapse)
-            d.children = null
-          }
-        }
+        // function collapse(d) {
+        //   // A collapsed data value was specified and is true
+        //   if(d.children && options.collapsed in d.data && !d.data[options.collapsed]) {
+        //     d.children.forEach(collapse)
+        //   } else if(d.children) {
+        //     d._children = d.children
+        //     d._children.forEach(collapse)
+        //     d.children = null
+        //   }
+        // }
       },
 
       resize: function(width, height) {
