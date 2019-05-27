@@ -1,4 +1,4 @@
-Package: collapsibleTree
+Package: collapsibleTree.ks
 Type: Package
 Title: Interactive Collapsible Tree Diagrams using 'D3.js'
 Version: 0.1.7
@@ -9,6 +9,7 @@ Authors@R: c(
   )
 Maintainer: Adeel Khan <AdeelK@gwu.edu>
 Description:
+Modification of CRAN package collapsibleTree to change the subtle aesthetics.
     Interactive Reingold-Tilford tree diagrams created using 'D3.js', where every node can be expanded and collapsed by clicking on it.
     Tooltips and color gradients can be mapped to nodes using a numeric column in the source data frame.
     See 'collapsibleTree' website for more information and examples.

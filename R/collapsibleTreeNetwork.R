@@ -98,7 +98,7 @@
 #' @importFrom data.tree Traverse Do Aggregate
 #' @export
 collapsibleTreeNetwork <- function(df, inputId = NULL, attribute = "leafCount",
-                                    aggFun = sum, fill = "lightsteelblue",
+                                    aggFun = sum, fill = "#ccc",#"lightsteelblue",
                                     linkLength = NULL, fontSize = 10, tooltip = TRUE,
                                     tooltipHtml = NULL, nodeSize = NULL, collapsed = TRUE,
                                     zoomable = TRUE, width = NULL, height = NULL) {
@@ -201,24 +201,44 @@ collapsibleTreeNetwork <- function(df, inputId = NULL, attribute = "leafCount",
   if(is.character(collapsed)) jsonFields <- c(jsonFields, collapsed)
 
   # only necessary to perform these calculations if there is a nodeSize specified
-  if(!is.null(nodeSize)) {
-    # Scale factor to keep the median leaf size around 10
-    scaleFactor <- 10/data.tree::Aggregate(node, nodeSize, stats::median)
-    # traverse down the tree and compute the weights of each node for the tooltip
-    t <- data.tree::Traverse(node, "pre-order")
-    # can't use substitute inside a subfunction
-    aggFunIsIdentity <- substitute(aggFun)=="identity"
-    data.tree::Do(t, function(x) {
-      if (aggFunIsIdentity) x$SizeOfNode <- x[[nodeSize]]
-      else x$SizeOfNode <- data.tree::Aggregate(x, nodeSize, sum)
-      # scale node growth to area rather than radius and round
-      x$SizeOfNode <- round(sqrt(x$SizeOfNode*scaleFactor)*pi, 2)
-    })
-    # update left margin based on new root size
-    options$margin$left <- options$margin$left + node$SizeOfNode - 10
-    jsonFields <- c(jsonFields, "SizeOfNode")
-  }
+  if(0){
+    if(!is.null(nodeSize)) {
+      # Scale factor to keep the median leaf size around 10
+      scaleFactor <- 10/data.tree::Aggregate(node, nodeSize, stats::median)
+      # traverse down the tree and compute the weights of each node for the tooltip
+      t <- data.tree::Traverse(node, "pre-order")
+      # can't use substitute inside a subfunction
+      aggFunIsIdentity <- substitute(aggFun)=="identity"
+      data.tree::Do(t, function(x) {
+        if (aggFunIsIdentity) x$SizeOfNode <- x[[nodeSize]]
+        else x$SizeOfNode <- data.tree::Aggregate(x, nodeSize, sum)
+        # scale node growth to area rather than radius and round
+        x$SizeOfNode <- round(sqrt(x$SizeOfNode*scaleFactor)*pi, 2)
+      })
+      # update left margin based on new root size
+      options$margin$left <- options$margin$left + node$SizeOfNode - 10
+      jsonFields <- c(jsonFields, "SizeOfNode")
+    }
+  }else{
+    if(!is.null(nodeSize)) {
+      # Scale factor to keep the median leaf size around 10
+      scaleFactor <- 10/data.tree::Aggregate(node, nodeSize, stats::median)
+      # traverse down the tree and compute the weights of each node for the tooltip
+      t <- data.tree::Traverse(node, "pre-order")
+      # can't use substitute inside a subfunction
+      aggFunIsIdentity <- substitute(aggFun)=="identity"
+      data.tree::Do(t, function(x) {
+        if (aggFunIsIdentity) x$SizeOfNode <- x[[nodeSize]]
+        else x$SizeOfNode <- data.tree::Aggregate(x, nodeSize, sum)
+        # scale node growth to area rather than radius and round
+        x$SizeOfNode <- round(sqrt(x$SizeOfNode*scaleFactor)*pi, 2)
+      })
+      # update left margin based on new root size
+      options$margin$left <- options$margin$left + node$SizeOfNode - 10
+      jsonFields <- c(jsonFields, "SizeOfNode")
+    }
 
+  }
   # keep only the JSON fields that are necessary
   if(is.null(jsonFields)) jsonFields <- NA
   data <- data.tree::ToListExplicit(node, unname = TRUE, keepOnly = jsonFields)
