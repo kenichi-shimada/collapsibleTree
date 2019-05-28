@@ -1,10 +1,9 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# collapsibleTree 0.1.7
+# collapsibleTree.ks 0.0.1
 
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/collapsibleTree)](https://cran.r-project.org/package=collapsibleTree)
-[![CRAN
-downloads](http://cranlogs.r-pkg.org/badges/collapsibleTree)](https://cran.r-project.org/package=collapsibleTree)
+KS: this is a branch of collapsibleTree package (0.1.7). I made a modification,
+to add a new function, collapsibleTreeNetwork.ks().
 
 collapsibleTree is an R [htmlwidget](http://www.htmlwidgets.org/) that
 allows you to create interactive collapsible Reingold-Tilford tree
