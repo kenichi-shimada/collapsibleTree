@@ -2,7 +2,6 @@
 
 S3method(collapsibleTree,Node)
 S3method(collapsibleTree,data.frame)
-export(collapsibleTree)
 export(collapsibleTreeNetwork)
 export(collapsibleTreeNetwork.ks)
 export(collapsibleTreeOutput)

@@ -26,7 +26,7 @@
 #'
 #' @export
 collapsibleTreeOutput <- function(outputId, width = "100%", height = "400px") {
-  shinyWidgetOutput(outputId, "collapsibleTree", width, height, package = "collapsibleTree")
+  shinyWidgetOutput(outputId, "collapsibleTree", width, height, package = "collapsibleTree.ks")
 }
 
 #' @rdname collapsibleTree-shiny
